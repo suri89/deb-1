@@ -81,7 +81,8 @@ def create_session(cookies_dict: dict) -> requests.Session:
     session = requests.Session()
     session.headers.update(HEADERS)
     for name, value in cookies_dict.items():
-        session.cookies.set(name, value, domain=".gmatclub.com")
+        # Ensure both name and value are strings
+        session.cookies.set(str(name), str(value), domain=".gmatclub.com")
     return session
 
 
