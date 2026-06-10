@@ -2,6 +2,7 @@ import re
 import gc
 import time
 import requests
+import cloudscraper
 from bs4 import BeautifulSoup
 
 # ─── URLs ─────────────────────────────────────────────────────────────────────
@@ -76,12 +77,19 @@ def extract_solution(post_bodies) -> str:
 
 # ─── Session Login ────────────────────────────────────────────────────────────
 
-def create_session(cookies_dict: dict) -> requests.Session:
-    """Create a requests session with user-provided cookies."""
-    session = requests.Session()
+def create_session(cookies_dict: dict):
+    """Create a cloudscraper session with user-provided cookies.
+    cloudscraper mimics a real browser and bypasses Cloudflare automatically.
+    """
+    session = cloudscraper.create_scraper(
+        browser={
+            "browser": "chrome",
+            "platform": "windows",
+            "mobile": False,
+        }
+    )
     session.headers.update(HEADERS)
     for name, value in cookies_dict.items():
-        # Ensure both name and value are strings
         session.cookies.set(str(name), str(value), domain=".gmatclub.com")
     return session
 
